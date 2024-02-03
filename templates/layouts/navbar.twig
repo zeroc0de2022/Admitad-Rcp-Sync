@@ -1,0 +1,132 @@
+{% if user is not null %}
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0;position: fixed;right:10px;width: 100%;">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">Remote CP</a>
+    </div>
+    <!-- /.navbar-header -->
+    <ul class="nav navbar-top-links navbar-right">
+        <li>
+            <a href="/" title="back to the main page" >
+                <i class="fa fa-home fa-fw"></i>
+            </a>
+        </li>
+        <li>
+            <a href="#" title="Add a new tool" data-toggle="modal" data-target="#add_new_tool">
+                <i class="fa fa-plus-square fa-fw"></i>
+            </a>
+        </li>
+
+        {% for tooltype in tools %}
+
+            {% if tooltype is not null and tooltype|length > 0 %}
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" title="{{ tooltype|length }} added">
+                        <i class="fa fa-download fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    {% set toolkey = '' %}
+                    <ul class="dropdown-menu dropdown-alerts">
+                        {% set num = 0 %}
+                        {% for tool in tooltype %}
+                            {% if num <= 9%}
+                                {% set toolkey = tool.tool %}
+                                <li>
+                                    <a href="{{ asset_url( toolkey, 's' ) }}/{{ tool.tool_name }}">
+                                        <div>
+                                            <i class="fa fa-gears fa-fw"></i> {{ tool.tool_name }}
+                                            <span class="pull-right text-muted small">{{ tool.reg_time|date('Y-m-d H:i:s') }}</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                            {% endif %}
+                        {% endfor %}
+                        <li>
+                            <a class="text-center" href="{{ asset_url( toolkey, 's' ) }}">
+                                <strong>All {{ toolkey }}s</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-alerts -->
+                </li>
+            {% endif %}
+        {% endfor %}
+        <li>
+            <a href="{{ asset_url('files/rcp-sync-plugin.zip') }}" title="Download plugin">
+                <i class="fa fa-wordpress fa-fw"></i>
+            </a>
+        </li>
+
+
+        <!-- /.dropdown -->
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-user fa-fw"></i>  {{ user.user_name }} <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-user">
+                <li><li><a href="{{ asset_url('profile') }}"><i class="fa fa-user fa-fw"></i> Profile</a></li>
+                {% if user.user_status == 'admin' or user.user_status == 'superadmin' %}
+                <li class="divider"></li>
+                <li><a href="{{ asset_url('users') }}"><i class="fa fa-users fa-fw"></i> Users</a></li>
+                {% endif %}
+                <li class="divider"></li>
+                <li><a href="{{ asset_url('logout') }}"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
+            </ul>
+            <!-- /.dropdown-user -->
+        </li>
+        <!-- /.dropdown -->
+    </ul>
+    <!-- /.navbar-top-links -->
+</nav>
+
+
+<!-- Button trigger modal -->
+<!-- Modal -->
+<div class="modal fade" id="add_new_tool" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Add a new tool</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group has-primary">
+                    <label for="modal_tool"></label>
+                    <select class="form-control" id="modal_tool" name="tool" onchange="setTool(this.value)">
+                        <option value="tool">Tool</option>
+                        <!-- <option value="importer">Importer</option>-->
+                    </select>
+                </div>
+                <div class="form-group has-primary">
+                    <label class="control-label" for="modal_tool_name">Tool name</label>
+                    <span id="modal_tool_name_notice"></span>
+                    <input type="text" class="form-control" name="tool_name" id="modal_tool_name" value="" placeholder="site.by" required>
+                </div>
+                <div class="form-group has-primary">
+                    <label for="modal_remote_link" id="remote_link_label">link to downloaded file </label>
+                    <span id="modal_remote_link_notice"></span>
+                    <input class="form-control" type="url" id="modal_remote_link" name="remote_link" value="" placeholder="https://export.admitad.com/ru/webmaster/websites/000000/products/export_adv_products/?user=user&code=f000f00000&template=00000&currency=BYN&feed_id=00000&last_import="  required>
+                    <p class="help-block" id="help-block"> CSV is a downloaded file type </p>
+                </div>
+                <div class="modal-footer">
+                    <label for="addToolButton"></label>
+                    <input type="button" id="addToolButton" onclick="addToolModal('tool');" class="btn btn-primary btn-lg" value="Add tool" disabled />
+                    <button type="button" class="btn btn-default btn-lg " data-dismiss="modal">Close</button>
+                </div>
+
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+{% endif %}

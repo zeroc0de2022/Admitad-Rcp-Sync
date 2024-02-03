@@ -1,0 +1,36 @@
+{% extends  'main.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-body">
+                        {% if message is not null %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endif %}
+                        <form role="form" action="{{ asset_url('login') }}" method="post">
+                            <fieldset>
+                                <div class="form-group">
+                                    <label for="user_login"></label>
+                                    <input class="form-control" placeholder="Login" id="user_login" name="user_login"
+                                           type="text" required autofocus pattern="[0-9A-Za-z_]{4,14}"
+                                           value="{{ form ? form.user_login }}"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" class="col-sm-2 control-label"></label>
+                                    <input class="form-control" placeholder="Password" name="user_pass" id="password"
+                                           type="password" value="" required>
+                                </div>
+                                <!-- Change this to a button or input when using this as a form -->
+                                <input type="submit" class="btn btn-lg btn-success btn-block" value="Log in">
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div
+{% endblock %}

@@ -1,0 +1,30 @@
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="theme-color" content="#ffffff">
+    <title>Remote Control Panel</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{{ asset_url('assets/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset_url('assets/css/style.css') }}" rel="stylesheet">
+    {% if UserAddintional is not null %}
+        <link href="/assets/css/style.css" rel="stylesheet">
+        <!-- DataTables CSS -->
+        <link href="/assets/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
+        <!-- DataTables Responsive CSS -->
+        <link href="/assets/datatables-responsive/css/dataTables.responsive.css" rel="stylesheet">
+
+    {% endif %}
+    <!-- Custom CSS -->
+    <link href="{{ asset_url('assets/dist/css/sb-admin-2.css') }}" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link href="{{ asset_url('assets/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset_url('assets/images/fav.ico') }}">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+</head>
+
+

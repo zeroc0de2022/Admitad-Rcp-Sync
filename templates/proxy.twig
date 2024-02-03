@@ -1,0 +1,137 @@
+{% extends  'main.twig' %}
+
+{% block body %}
+    <!-- content -->
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header"></h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form role="form" action="" method="POST">
+
+                            <div class="form-group">
+                                <label for="proxyList"></label>
+                                <textarea id="proxyList" class="form-control" rows="8" name="proxyList" placeholder="91.198.210
+                                .213:8000:6M6YDU:mCHXdq" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg">Add proxy</button>
+                            {% if proxyList|length > 0 %}
+                                <input type="button" onclick="delProxy()" class="btn btn-primary btn-lg"
+                                       value="Delete selected">
+                            {% endif %}
+                        </form>
+                        <!-- /.row (nested) -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+            <!-- /.col-lg-6 (nested) -->
+            <div class="col-lg-12">
+                {% if proxyList|length > 0 %}
+                    <div class="dataTable_wrapper">
+                        <table class="table table-striped table-bordered table-hover w-100 p-3"
+                               id="dataTables-example">
+                            <thead>
+                            <tr>
+                                <td>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input id="checkAll" type="checkbox" onclick="toggleCheckboxes()">
+                                        </label>
+                                    </div>
+                                </td>
+                                <th>Proxy</th>
+                                <th>Notice</th>
+                                <th>Status</th>
+                                <th>Uptime</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- *** -->
+                            {% set num = 0 %}
+                            {% for proxy in proxyList %}
+                                {% if num % 2 == 0 %}
+                                    {% set  tr_class = 'odd' %}
+                                {% else %}
+                                    {% set  tr_class = 'even' %}
+                                {% endif %}
+                                {% set num = num + 1 %}
+                                <tr class="{{ tr_class }} gradeX">
+
+                                    <td>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name="del[]" value="{{ proxy.proxy_id }}">
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td>{{ proxy.proxy }}</td>
+                                    <td>{{ proxy.notice }}</td>
+                                    <td class="center">{{ proxy.status > 0 ? '<p class="text-danger">blocked</p>' : '<p class="text-success">active</p>' }}</td>
+                                    <td class="center">{{ proxy.uptime|date('Y-m-d H:i:s') }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.col-lg-6 (nested) -->
+        </div>
+
+        <script>
+            function toggleCheckboxes() {
+                var checkboxes = document.querySelectorAll('input[name="del[]"]');
+                var checkAll = document.getElementById('checkAll');
+
+                for (var i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].checked = checkAll.checked;
+                }
+            }
+
+            function delProxy() {
+                var checkboxes = document.querySelectorAll('input[name="del[]"]:checked');
+                var values = [];
+                if (checkboxes.length > 0) {
+                    try {
+                        for (var i = 0; i < checkboxes.length; i++) {
+                            values.push(checkboxes[i].value);
+                        }
+                        var data = {
+                            action: 'prodel',
+                            values: values
+                        };
+                        $.post('', data, function (response) {
+                            // Handle the server successful response
+                            console.log(response);
+                            location.reload();
+                        });
+                    } catch (e) {
+                        alert(e.message);
+                    }
+
+                } else {
+                    alert("No selected Proxy");
+                }
+            }
+        </script>
+
+    </div>
+    <!-- /#page-wrapper -->
+    <!-- /content -->
+{% endblock %}

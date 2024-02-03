@@ -1,0 +1,111 @@
+{% extends  'main.twig' %}
+
+{% block body %}
+
+    <!-- content -->
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Profile</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                {% if message is not null %}
+                                    {% set alert = 'danger' %}
+                                    {% if code is not null %}
+                                        {% if code == 500 %}
+                                            {% set alert = 'success' %}
+                                        {% endif %}
+                                    {% endif %}
+                                    <div class="alert alert-{{ alert }}" role="alert">
+                                        {{ message }}
+                                    </div>
+                                {% endif %}
+                                <form role="form" method="POST" onsubmit="return validate()">
+                                    <div class="form-group has-primary">
+                                        <label class="control-label" for="disabledSelect">Status</label>
+                                        <select id="disabledSelect" class="form-control" disabled>
+                                            <option>{{ profile.user_status }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group has-primary">
+                                        <label class="control-label" for="inputName">Name</label>
+                                        <input type="text" class="form-control" name="user_name" id="inputName"
+                                               value="{{ profile.user_name }}" pattern="^[a-zA-ZА-Яа-яЁё\s]+$">
+                                        <input type="hidden" name="action" id="action" value="profile">
+                                    </div>
+
+                                    <div class="form-group has-primary">
+                                        <label class="control-label" for="login">Login</label>
+                                        <input type="text" class="form-control" id="login"
+                                               value="{{ profile.user_login }}" disabled>
+                                    </div>
+                                    <div class="form-group has-primary">
+                                        <label class="control-label" for="inputEmail">Email</label>
+                                        <input type="email" class="form-control" name="user_email" id="inputEmail"
+                                               value="{{ profile.user_email }}" autocomplete="on">
+                                    </div>
+                                    <div class="form-group has-primary">
+                                        <label class="control-label" for="password">Current password</label>
+                                        <input type="password" class="form-control" name="password" id="password"
+                                               placeholder="Current password" required autocomplete="on"/>
+                                    </div>
+                                    <div class="form-group has-warning">
+                                        <label class="control-label" for="password1">New password</label>
+                                        <input type="password" class="form-control" name="password1" id="password1"
+                                               placeholder="New password" autocomplete="on">
+                                    </div>
+                                    <div class="form-group has-warning">
+                                        <label class="control-label" for="password2">Repeat new password</label>
+                                        <input type="password" class="form-control" name="password2" id="password2"
+                                               placeholder="Repeat new password" autocomplete="on">
+                                    </div>
+                                    <p id="valid"></p>
+                                    <input type="submit" value="Save"
+                                           class="btn btn-outline btn-primary btn-lg btn-block">
+                                </form>
+                            </div>
+                            <!-- /.col-lg-6 (nested) -->
+                        </div>
+                        <!-- /.row (nested) -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#new-password, #new-password2").keyup(validate);
+        });
+
+        function validate() {
+            let pass1 = $("#new-password").val();
+            let pass2 = $("#new-password2").val();
+
+            if (pass1 === pass2) {
+                $("#valid").text("");
+                return true;
+            } else {
+                $("#valid").html('<div class="alert alert-danger">Passwords dont match</div>');
+                return false;
+            }
+        }
+    </script>
+    <!-- /content -->
+
+{% endblock %}

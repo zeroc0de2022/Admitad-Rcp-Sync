@@ -1,0 +1,86 @@
+{% extends 'main.twig' %}
+
+{% block body %}
+    <!-- content -->
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header"></h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+
+        <!-- /.row -->
+        <div class="row">
+            {% if tools.importer is not null and tools.importer|length > 0 %}
+                <!-- /.col-lg-4 -->
+                {% for importer in tools.importer %}
+                    <div class="col-lg-4">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                {{ importer.tool_name }}
+                            </div>
+                            <div class="panel-body">
+                                <a class="list-group-item">
+                                    <i class="fa fa-clock-o fa-fw"></i> Last synchronization date:
+                                    <span class="pull-right text-muted small strong">
+                                        <em>{{ importer.info.csv_upload_time != 0 ?  importer.info.csv_upload_time|date('H:i d.m.Y') : 'Never' }}</em>
+                                    </span>
+                                </a>
+                                <a class="list-group-item">
+                                    <i class="fa fa-shopping-cart fa-fw"></i> Total products:
+                                    <span class="pull-right text-muted small strong">
+                                        <em>{{ importer.info.all_product_sum }}</em>
+                                    </span>
+                                </a>
+                                <a class="list-group-item">
+                                    <i class="fa fa-ellipsis-v fa-fw"></i> Number of products in last CSV:
+                                    <span class="pull-right text-muted small strong">
+                                        <em>{{ importer.info.csv_product_sum }}</em>
+                                    </span>
+                                </a>
+                                <a class="list-group-item">
+                                    <i class="fa fa-ellipsis-v fa-fw"></i> Number of new products:
+                                    <span class="pull-right text-muted small strong">
+                                        <em>{{ importer.info.csv_new_product_sum }}</em>
+                                    </span>
+                                </a>
+                                <a class="list-group-item">
+                                    <i class="fa fa-ellipsis-v fa-fw"></i> Number of updated products:
+                                    <span class="pull-right text-muted small strong">
+                                        <em>{{ importer.info.csv_updated_product_sum }}</em>
+                                    </span>
+                                </a>
+                                <br/>
+                                <a class="list-group-item">
+                                    <i class="fa fa-database fa-fw"></i> Database size:
+                                    <span class="pull-right text-muted small strong">
+                                        <em>{{ importer.info.dbsize }} MB</em>
+                                    </span>
+                                </a>
+                                <a class="list-group-item">
+                                    <i class="fa fa-hdd-o fa-fw"></i> HDD size:
+                                    <span class="pull-right text-muted small strong">
+                                        <em>{{ importer.info.hdd_size }}</em>
+                                    </span>
+                                </a>
+                                <a class="list-group-item">
+                                    <i class="fa fa-hdd-o fa-fw"></i> HDD free space:
+                                    <span class="pull-right text-muted small strong">
+                                        <em>{{ importer.info.hdd_free }}</em>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col-lg-4 -->
+                {% endfor %}
+            {% else %}
+                <h2>No importers</h2>
+            {% endif %}
+
+
+        </div>
+    </div>
+    <!-- /content -->
+{% endblock %}

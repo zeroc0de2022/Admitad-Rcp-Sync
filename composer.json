@@ -1,0 +1,39 @@
+{
+    "name": "zeroc0de/cpsync",
+    "description": "Control Panel for managing of plugins of admitad goods parser",
+    "type": "project",
+    "license": "GNU Affero v3.0",
+    "autoload": {
+        "psr-4": {
+            "Cpsync\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "zeroc0de2022",
+            "email": "98693638+zeroc0de2022@users.noreply.github.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php-di/php-di": "*",
+        "slim/slim": "*",
+        "slim/psr7": "*",
+        "twig/twig": "*",
+        "devcoder-xyz/php-dotenv": "*",
+        "tiben/crontab-manager": "*",
+        "ext-pdo": "*",
+        "ext-iconv": "*",
+        "ext-curl": "*",
+        "ext-dom": "*",
+      "ext-libxml": "*"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "6.4.2",
+        "php-mock/php-mock": "*",
+        "phpunit/php-text-template": "*",
+        "php-mock/php-mock-phpunit": "*",
+        "phpunit/phpunit": "10.5.9",
+        "php-mock/php-mock-integration": "*"
+    }
+}

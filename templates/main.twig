@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'layouts/header.twig' %}
+<body>
+<div id="wrapper">
+    {% include 'layouts/navbar.twig' %}
+    {% block body %}{% endblock %}
+</div>
+{% include 'layouts/footer.twig' %}
+</body>
+</html>

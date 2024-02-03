@@ -1,0 +1,438 @@
+{% extends 'main.twig' %}
+
+{% block body %}
+    <!-- content -->
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-header primary" id="page-header">
+                    <h1 class="pull-left">
+                        <i class="fa fa-download fa-1x"></i> {{ tool.tool_name|escape }}
+                    </h1>
+                </div>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="tooltip-demo">
+                <span class="pull-right">
+                    <button class="btn btn-outline btn-primary btn-xs" data-toggle="tooltip" data-placement="top"
+                            data-original-title="Delete only tool"
+                            onclick="removeItem('Tool', $('#tool_name_hid').val(), 'delete tool', 'separate')">
+                        <i class="fa fa-trash-o fa-2x"></i>
+                    </button>
+                    <button class="btn btn-outline btn-danger btn-xs" data-toggle="tooltip" data-placement="top"
+                            data-original-title="Delete tool with all of his products"
+                            onclick="removeItem('Tool', $('#tool_name_hid').val(), 'delete tool with all of his products', 'complete')">
+                        <i class="fa fa-trash-o fa-2x"></i>
+                    </button>
+                </span>
+                </div>
+                <ul class="nav nav-pills">
+                    <li class="active">
+                        <a href='#' style='border-bottom-left-radius: 0;border-bottom-right-radius: 0;'
+                           data-toggle='tab'>Config</a>
+                    </li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="tool-config">
+                        <div class="panel panel-primary" style="border-top-left-radius: 0;">
+                            <div class="panel-heading" style="border-top-left-radius: 0;">
+                                <div style="text-align: right;">{{ "now"|date("H:i:s d.m.Y ") }}</div>
+                            </div>
+                            <div class="panel-body">
+                                <input type="hidden" id="tool_name_hid" value="{{ tool.tool_name|escape|trim }}">
+                                <div class="col-lg-12" style="border-right-color: #337ab7; ">
+                                    <div class="col-lg-6">
+                                        <div class="alert alert-info">
+                                            <p class="list-group-item">
+                                                <i class="fa fa-file-excel-o fa-fw"></i> CSV:
+                                                <span class="pull-right text-muted small">
+                                                    <em> {{ tool.info.csv_notice|escape }}</em>
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="alert alert-info">
+                                            <p class="list-group-item">
+                                                <i class="fa fa-shopping-cart fa-fw"></i> Product:
+                                                <span class="pull-right text-muted small">
+                                                    <em>{{ tool.info.product_notice|escape }}</em>
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <button type="button" id="manual_local_csv_status"
+                                                class="btn btn-primary btn-lg btn-block"
+                                                {{ tool.options.local_csv_status ? 'enabled' : 'disabled' }}
+                                                onclick="startParse('csv', $('#tool_name_hid').val(), this.id)">
+                                            Manual Parse CSV
+                                        </button>
+                                        <p class="help-block"></p>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <button type="button" id="manual_local_product_status"
+                                                class="btn btn-primary btn-lg btn-block" {{ tool.config.local_product_status ? 'enabled' : 'disabled' }}
+                                                onclick="startParse('product', $('#tool_name_hid').val(), this.id)">
+                                            Manual Parse products
+                                        </button>
+                                        <p class="help-block"></p>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group has-primary">
+                                            <label for="remote_link">Link to download file</label>
+                                            <input class="form-control" name="remote_link" id="remote_link" type="url"
+                                                   placeholder="https://export.admitad.com/ru/webmaster/websites/000000/products/export_adv_products/?user=user&code=f000f00000&template=00000&currency=BYN&feed_id=00000&last_import="
+                                                   value="{{ tool.remote_link|escape }}"
+                                                   onchange="editToolConf(this, 'editTool')">
+                                            <p class="help-block">Upload format: CSV</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <div class="form-group has-primary">
+                                            <label for="limit_parsed_line">Sum of products</label>
+                                            <input class="form-control" name="limit_parsed_line"
+                                                   id="limit_parsed_line" type="number"
+                                                   value="{{ tool.config.limit_parsed_line|escape }}" placeholder="0"
+                                                   onchange="editToolConf(this, 'editToolConf')">
+                                            <p class="help-block">Sum of products for unloading.<br/> 0 equal All.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="form-group has-primary">
+                                            <label for="thread">Threads</label>
+                                            <select class="form-control" name="thread" onchange="editToolConf(this,
+                                            'editToolConf')" id="thread">
+                                            </select>
+                                            <p class="help-block">Multi-thread parsing og products.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="form-group has-primary">
+                                            <label for="up_sec">Speed of parsing</label>
+                                            <select class="form-control" name="up_sec" id="up_sec"
+                                                    onchange="editToolConf(this, 'editToolConf')">
+                                            </select>
+                                            <p class="help-block">
+                                                Add a product every N seconds.<br/>
+                                                <b>Only for manual parsing</b>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group has-primary">
+                                            <b>CSV file parsing</b><br/>
+                                            <!-- Rectangular switch -->
+                                            <label for="local_csv_status" class="switch">
+                                                <input type="checkbox" id="local_csv_status"
+                                                       name="local_csv_status" {{ tool.config.local_csv_status == 1 ? 'checked' : '' }}
+                                                       onchange="editToolConf(this, 'editToolConf')"/>
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <p class="help-block">Update/Add products.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="form-group has-primary">
+                                            <b>Product parsing</b><br/>
+                                            <!-- Rectangular switch -->
+                                            <label for="local_product_status" class="switch">
+                                                <input type="checkbox" id="local_product_status"
+                                                       name="local_product_status" {{ tool.config.local_product_status == 1 ? 'checked' : '' }}
+                                                       onchange="editToolConf(this, 'editToolConf')"/>
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <p class="help-block">Parsing add-info of products</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="form-group has-primary">
+                                            <b>Proxy</b><br/>
+                                            <!-- Rectangular switch -->
+                                            <label for="proxy_status" class="switch">
+                                                <input type="checkbox"
+                                                       name="proxy_status" {{ tool.config.proxy_status == 1 ? 'checked' : '' }}
+                                                       id="proxy_status" onchange="editToolConf(this, 'editToolConf')"/>
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <p class="help-block">Use a proxy for parsing products.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- col-lg-12 -->
+                        </div>
+                    </div>
+
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Add Cron task</div>
+                        <div class="panel-body">
+                            <div class="col-lg-12">
+                                <form action="" method="POST">
+                                    <input type="hidden" name="action" value="addCronTask" style="display: none;">
+                                    <input type="hidden" name="tool_name" value="{{ tool.tool_name|escape }}"
+                                           style="display: none;">
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label id="cron-help-block" for="task-select">
+                                                Updating/Adding products to the general/local database from the donor
+                                                upload file
+                                            </label>
+                                            <select class="form-control" id="task-select" name="crontask"
+                                                    onchange="cronHelpBlock(this.value)" style="width:30%">
+                                                <option value="local_csv">CSV file parsing</option>
+                                                <option value="local_product">Parsing add-info of products</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <table class="table has-primary" style="width:100%">
+                                                <tr>
+                                                    <th>Mins <a id="toggle-min" data-container="body"
+                                                                data-toggle="popover" data-placement="top"
+                                                                onclick="setPopoverText(this.id)" data-content="">
+                                                            <i class="fa fa-info-circle"></i>
+                                                        </a>
+                                                    </th>
+                                                    <th>Hours <a id="toggle-hour" data-container="body"
+                                                                 data-toggle="popover" data-placement="top"
+                                                                 onclick="setPopoverText(this.id)" data-content="">
+                                                            <i class="fa fa-info-circle"></i>
+                                                        </a>
+                                                    </th>
+                                                    <th>Days <a id="toggle-day" data-container="body"
+                                                                data-toggle="popover" data-placement="top"
+                                                                onclick="setPopoverText(this.id)" data-content="">
+                                                            <i class="fa fa-info-circle"></i>
+                                                        </a>
+                                                    </th>
+                                                    <th>Months <a id="toggle-month" data-container="body"
+                                                                  data-toggle="popover" data-placement="top"
+                                                                  onclick="setPopoverText(this.id)" data-content="">
+                                                            <i class="fa fa-info-circle"></i>
+                                                        </a>
+                                                    </th>
+                                                    <th>Days of week <a id="toggle-weekday" data-container="body"
+                                                                        data-toggle="popover" data-placement="top"
+                                                                        onclick="setPopoverText(this.id)"
+                                                                        data-content="">
+                                                            <i class="fa fa-info-circle"></i>
+                                                        </a>
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label for="min-select"></label>
+                                                        <select class="form-control" id="min-select" name="min"
+                                                                onchange="addDiv(this.name, this.value, ['every', 'specific', 'custom'])">
+                                                            <option value="every-min">Every min</option>
+                                                            <option value="specific-min">Every N minutes</option>
+                                                            <option value="custom-min">Set minutes</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <label for="hour-select"></label>
+                                                        <select class="form-control" id="hour-select" name="hour"
+                                                                onchange="addDiv(this.name, this.value, ['every', 'specific', 'custom'])">
+                                                            <option value="every-hour">Every hour</option>
+                                                            <option value="specific-hour">Every N hours</option>
+                                                            <option value="custom-hour">Set hours</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <label for="day-select"></label>
+                                                        <select class="form-control" id="day-select" name="day"
+                                                                onchange="addDiv(this.name, this.value, ['every', 'specific', 'custom'])">
+                                                            <option value="every-day">Every day</option>
+                                                            <option value="specific-day">Every N day</option>
+                                                            <option value="custom-day">Set days</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <label for="month-select"></label>
+                                                        <select class="form-control" id="month-select" name="month"
+                                                                onchange="addDiv(this.name, this.value, ['every', 'custom'])">
+                                                            <option value="every-month">Every month</option>
+                                                            <option value="custom-month">In certain months</option>
+                                                        </select>
+
+                                                    </td>
+                                                    <td>
+                                                        <label for="weekday-select"></label>
+                                                        <select class="form-control" id="weekday-select" name="weekday"
+                                                                onchange="addDiv(this.name, this.value, ['every', 'custom'])">
+                                                            <option value="every-weekday">Every day of week</option>
+                                                            <option value="custom-weekday">In certain days</option>
+                                                        </select>
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label for="every-min-wrapper"></label>
+                                                        <input class="form-control" value="*" name="every-min"
+                                                               type="text" id="every-min-wrapper" placeholder="*"
+                                                               style="display: block;" readonly>
+                                                        <label for="specific-min-wrapper"></label>
+                                                        <input class="form-control" min="2" max="59" name="specific-min"
+                                                               value="2" type="number" id="specific-min-wrapper"
+                                                               placeholder="5" style="display: none;" disabled>
+                                                        <input class="form-control" name="custom-min" type="text"
+                                                               id="custom-min-wrapper" placeholder="1-5 or 5,6,7 or 5"
+                                                               style="display: none;" disabled
+                                                               pattern="^(?:(?:[0-9]|[1-5][0-9])(?:-(?:[0-9]|[1-5][0-9]))?|(?:[0-5]?[0-9],)*(?:[0-5]?[0-9]))$"
+                                                               title="from 0 to 59"/>
+                                                    </td>
+                                                    <td>
+                                                        <label for="every-hour-wrapper"></label>
+                                                        <input class="form-control" name="every-hour" value="*"
+                                                               type="text" id="every-hour-wrapper" placeholder="*"
+                                                               style="display: block;" readonly/>
+                                                        <label for="specific-hour-wrapper"></label>
+                                                        <input class="form-control" min="2" max="23"
+                                                               name="specific-hour" value="2" type="number"
+                                                               id="specific-hour-wrapper" placeholder="5"
+                                                               style="display: none;" disabled/>
+                                                        <input class="form-control" name="custom-hour" type="text"
+                                                               id="custom-hour-wrapper" placeholder="1-5 or 5,6,7 or 5"
+                                                               style="display: none;" disabled
+                                                               pattern="^(?:[01]?[0-9]|2[0-3])(?:(?:,|-)(?:[01]?[0-9]|2[0-3]))*$"
+                                                               title="from 0 to 23"/>
+                                                    </td>
+                                                    <td>
+                                                        <label for="every-day-wrapper"></label>
+                                                        <input class="form-control" value="*" name="every-day"
+                                                               type="text" id="every-day-wrapper" placeholder="*"
+                                                               style="display: block;" readonly>
+                                                        <label for="specific-day-wrapper"></label>
+                                                        <input class="form-control" min="2" max="31" name="specific-day"
+                                                               value="2" type="number" id="specific-day-wrapper"
+                                                               placeholder="5" style="display: none;" disabled>
+                                                        <input class="form-control" name="custom-day" type="text"
+                                                               id="custom-day-wrapper" placeholder="1-5 or 5,6,29 or 5"
+                                                               style="display: none;" disabled
+                                                               pattern="^(?:[12]?[0-9]|3[0-1])(?:(?:,|-)(?:[12]?[0-9]|3[0-1]))*$"
+                                                               title="from 1 to 31">
+                                                    </td>
+                                                    <td>
+                                                        <label for="every-month-wrapper"></label>
+                                                        <input class="form-control" value="*" name="every-month"
+                                                               type="text" id="every-month-wrapper" placeholder="*"
+                                                               style="display: block;" readonly>
+                                                        <input class="form-control" name="custom-month" type="text"
+                                                               id="custom-month-wrapper" placeholder="1-5 or 5,6,7 or 5"
+                                                               style="display: none;" disabled
+                                                               pattern="^(?:[1-9]|1[0-2])(?:(?:,|-)(?:[1-9]|1[0-2]))*$"
+                                                               title="from 1 to 12">
+                                                    </td>
+                                                    <td>
+                                                        <label for="every-weekday-wrapper"></label>
+                                                        <input class="form-control" value="*" type="text"
+                                                               id="every-weekday-wrapper" placeholder="*"
+                                                               style="display: block;" name="every-weekday" readonly>
+                                                        <input class="form-control" name="custom-weekday" type="text"
+                                                               id="custom-weekday-wrapper"
+                                                               placeholder="1-5 or 5,6,7 or 5" style="display: none;"
+                                                               disabled
+                                                               pattern="^(?:[1]?[1-7])(?:(?:,|-)(?:[1]?[1-7]))*$"
+                                                               title="from 1 to 7">
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="submit" class="btn btn-primary" value="Add"/>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% if cronTask is defined and cronTask is not empty %}
+                        <div class="panel panel-primary">
+                            <div class="panel-heading"> Cron active tasks</div>
+                            <div class="panel-body">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <table class="table has-primary" style="width:100%">
+                                            <tr>
+                                                <th style="width:10%">Mins</th>
+                                                <th style="width:10%">Hours</th>
+                                                <th style="width:10%">Days</th>
+                                                <th style="width:10%">Months</th>
+                                                <th style="width:10%">Days of week</th>
+                                                <th></th>
+                                                <th style="width:10%">*</th>
+                                            </tr>
+                                            {% for task in cronTask %}
+                                                {% set cronid_comment = task.comments|split('@', 2) %}
+                                                <tr>
+                                                    <td>
+                                                        <label for="minutes"></label>
+                                                        <input class="form-control" id="minutes" type="text"
+                                                               value="{{ task.minutes }}" readonly/>
+                                                    </td>
+                                                    <td>
+                                                        <label for="hours"></label>
+                                                        <input class="form-control" type="text" id="hours"
+                                                               value="{{ task.hours }}" readonly/>
+                                                    </td>
+                                                    <td>
+                                                        <label for="dayOfMonth"></label>
+                                                        <input class="form-control" type="text" id="dayOfMonth"
+                                                               value="{{ task.dayOfMonth }}" readonly/>
+                                                    </td>
+                                                    <td>
+                                                        <label for="months"></label>
+                                                        <input class="form-control" type="text" id="months"
+                                                               value="{{ task.months }}" readonly/>
+                                                    </td>
+                                                    <td>
+                                                        <label for="dayOfWeek"></label>
+                                                        <input class="form-control" id="dayOfWeek" type="text"
+                                                               value="{{ task.dayOfWeek }}" readonly/>
+                                                    </td>
+                                                    <td><b>{{ cronid_comment.1 }}</b></td>
+                                                    <td>
+                                                        <input class="form-control" type="submit" value="Remove"
+                                                               onclick="removeItem('CronTask', '{{ cronid_comment.0
+                                                               }}', this.title, 'cron')" title="Remove cron task"/>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+    </div>
+    <script>
+
+        setOptionLimit(1, 60, "up_sec", {{ tool.config.up_sec }});
+        setOptionLimit(1, 10, "thread", {{ tool.config.thread }});
+
+        function setOptionLimit(start, end, select_id, selected_option) {
+            var select = document.getElementById(select_id);
+            for (var i = 1; i <= end; i++) {
+                var option = document.createElement("option");
+                option.text = i;
+                if ( selected_option === i ) {
+                    option.selected = true; // Set selected for selected option
+                }
+                select.add(option);
+            }
+        }
+    </script>
+    {{ app.request.host }}
+    <script src="{{ asset_url( 'assets/js/' ~ tool.tool ~ '.js?' ~ date().timestamp ) }}"></script>
+    <!-- /content -->
+{% endblock %}

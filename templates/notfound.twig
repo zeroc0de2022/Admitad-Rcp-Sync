@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include  'layouts/header.twig' %}
+<body>
+<div id="wrapper">
+    {% block body %}
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">Not found</h1>
+                    </div>
+                    <div class="col-lg-12">
+                        <h2 class="page-header text-primary">Within 10 seconds you will be redirected to the main
+                            page</h2>
+                    </div>
+
+                    <!-- /.col-lg-12 -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /#page-wrapper -->
+    {% endblock %}
+</div>
+{% include 'layouts/footer.twig' %}
+</body>
+</html>

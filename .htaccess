@@ -1,0 +1,12 @@
+AddDefaultCharset utf-8
+AddCharset utf-8 .js
+
+php_value upload_max_filesize 500M
+php_value max_execution_time 0
+php_value post_max_size 500M
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+
